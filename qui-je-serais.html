@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Qui je serais dans Flash</title>
+    <link rel="stylesheet" href="menu.css">
+
+    <style>
+        body {
+            margin: 0;
+            background-color: rgb(200, 0, 0);
+            font-family: Arial, sans-serif;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+            background: #0f0f0f;
+            border-bottom: 3px solid #FFD200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            box-shadow:
+                0 0 15px rgba(0, 0, 0, 0.8),
+                0 0 15px rgba(255, 210, 0, 0.3);
+        }
+
+        .top-title {
+            color: #DC0000;
+            font-size: 34px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-shadow:
+                0 0 5px #DC0000,
+                0 0 15px #DC0000,
+                0 0 25px #DC0000;
+        }
+
+        .top-title span {
+            color: #FFD200;
+        }
+
+        .contenu {
+            max-width: 650px;
+            margin: 110px auto 40px auto;
+            padding: 25px;
+            background: rgba(15, 15, 15, 0.9);
+            border: 3px solid #FFD200;
+            border-radius: 20px;
+            color: white;
+            line-height: 1.7;
+            text-align: center;
+            box-shadow:
+                0 0 15px #DC0000,
+                0 0 30px rgba(255, 210, 0, 0.4);
+        }
+
+        .contenu h1,
+        .contenu h2 {
+            color: #DC0000;
+            text-shadow:
+                0 0 5px #DC0000,
+                0 0 15px #DC0000;
+        }
+
+        .contenu strong {
+            color: #FFD200;
+        }
+
+        .progression {
+            color: #FFD200;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .barre {
+            height: 8px;
+            margin: 0 auto 15px auto;
+            width: 80%;
+            background: #2a2a2a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .barre div {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #DC0000, #FFD200);
+            transition: width 0.4s ease;
+        }
+
+        .reponse {
+            display: block;
+            width: 85%;
+            margin: 12px auto;
+            padding: 12px 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            background: linear-gradient(90deg, #960000, #DC0000);
+            border: 2px solid #FFD200;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .reponse:hover {
+            background: #FFD200;
+            color: black;
+            transform: scale(1.04);
+            box-shadow:
+                0 0 10px #FFD200,
+                0 0 20px #FFD200;
+        }
+
+        .emoji-resultat {
+            font-size: 70px;
+        }
+
+        .cache {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <div class="top-title">
+            🏎️ FLASH <span>McQUEEN</span> ⚡
+        </div>
+    </div>
+
+    <div class="contenu">
+        <h1>🏁 Qui je serais dans Flash ?</h1>
+
+        <div id="quiz">
+            <p class="progression" id="progression"></p>
+            <div class="barre"><div id="remplissage"></div></div>
+            <h2 id="question"></h2>
+            <div id="reponses"></div>
+        </div>
+
+        <div id="resultat" class="cache">
+            <p>Tu serais...</p>
+            <div class="emoji-resultat" id="emoji"></div>
+            <h2 id="nom"></h2>
+            <p id="description"></p>
+            <button class="reponse" id="rejouer">🔄 Refaire le quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const personnages = {
+            flash:  { emoji: '🏎️', nom: 'Flash McQueen',
+                      texte: 'Ambitieux et plein de confiance, tu as soif de réussir et tu donnes tout pour tes objectifs. Ton défi : te rappeler que l\'amitié compte autant que la victoire.' },
+            martin: { emoji: '🛻', nom: 'Martin',
+                      texte: 'Drôle, loyal et toujours de bonne humeur, tu es l\'ami sur qui tout le monde peut compter. Avec toi, personne ne s\'ennuie !' },
+            sally:  { emoji: '🚙', nom: 'Sally',
+                      texte: 'Intelligente, calme et attentionnée, tu sais prendre le temps d\'apprécier la vie et d\'écouter les autres. Les gens se sentent bien avec toi.' },
+            doc:    { emoji: '🚓', nom: 'Doc Hudson',
+                      texte: 'Sage et réfléchi, tu parles peu mais tu vois juste. Tu préfères le travail bien fait aux grands discours, et on vient te demander conseil.' },
+            chick:  { emoji: '🚗', nom: 'Chick Hicks',
+                      texte: 'Compétiteur dans l\'âme, tu détestes perdre et tu veux toujours la première place. Attention : gagner, c\'est mieux quand on reste fair-play !' },
+            storm:  { emoji: '🏁', nom: 'Jackson Storm',
+                      texte: 'Perfectionniste et très organisé, tu t\'entraînes sans relâche et tu vises toujours plus haut. Tu aimes la technologie et les résultats mesurables.' }
+        };
+
+        // Chaque réponse est liée à un personnage : [texte, personnage]
+        const reserve = [
+            {
+                texte: 'Ton samedi idéal, c\'est...',
+                choix: [
+                    ['Un tournoi ou un défi sportif', 'flash'],
+                    ['Une soirée entre amis à rigoler', 'martin'],
+                    ['Une balade en pleine nature', 'sally'],
+                    ['Un bon livre au calme', 'doc']
+                ]
+            },
+            {
+                texte: 'Un ami a un gros problème. Tu...',
+                choix: [
+                    ['L\'écoutes longuement, sans le juger', 'sally'],
+                    ['Essaies de le faire rire', 'martin'],
+                    ['Lui donnes un conseil sage et direct', 'doc'],
+                    ['Lui proposes un plan d\'action précis', 'storm']
+                ]
+            },
+            {
+                texte: 'Avant un gros examen ou un grand rendez-vous, tu...',
+                choix: [
+                    ['Révises tout avec un planning précis', 'storm'],
+                    ['Fonces avec confiance, ça va bien se passer', 'flash'],
+                    ['Veux absolument être le meilleur', 'chick'],
+                    ['Gardes ton calme, tu as déjà tout préparé', 'doc']
+                ]
+            },
+            {
+                texte: 'Dans un travail de groupe, tu es plutôt...',
+                choix: [
+                    ['Le chef qui prend les décisions', 'flash'],
+                    ['Celui qui met l\'ambiance', 'martin'],
+                    ['Celui qui organise tout dans les moindres détails', 'storm'],
+                    ['Celui qui veut que SON idée gagne', 'chick']
+                ]
+            },
+            {
+                texte: 'Tu perds un jeu important. Ta réaction ?',
+                choix: [
+                    ['Je recommence tout de suite, plus fort', 'flash'],
+                    ['J\'en rigole et je passe à autre chose', 'martin'],
+                    ['Je trouve ça injuste', 'chick'],
+                    ['J\'analyse mes erreurs pour progresser', 'storm']
+                ]
+            },
+            {
+                texte: 'Pour toi, la plus belle qualité, c\'est...',
+                choix: [
+                    ['La loyauté', 'martin'],
+                    ['La sagesse', 'doc'],
+                    ['La liberté', 'sally'],
+                    ['La détermination', 'flash']
+                ]
+            },
+            {
+                texte: 'Tu gagnes un voyage, tu choisis...',
+                choix: [
+                    ['Un petit village paisible', 'sally'],
+                    ['Une grande ville moderne et high-tech', 'storm'],
+                    ['Un endroit où il y a une grande compétition', 'chick'],
+                    ['Un road trip avec tes amis', 'martin']
+                ]
+            },
+            {
+                texte: 'Un inconnu te fait un compliment. Tu préfères qu\'on dise que tu es...',
+                choix: [
+                    ['Le plus rapide et le plus doué', 'flash'],
+                    ['Le plus gentil et le plus drôle', 'martin'],
+                    ['Le plus sage et le plus fiable', 'doc'],
+                    ['Le plus performant', 'storm']
+                ]
+            },
+            {
+                texte: 'Quelqu\'un triche pour te battre. Tu...',
+                choix: [
+                    ['Le dis calmement, sans te mettre en colère', 'sally'],
+                    ['Veux prendre ta revanche tout de suite', 'flash'],
+                    ['Fais pareil, tout est permis pour gagner', 'chick'],
+                    ['Laisses tomber, ça ne mérite pas ton énergie', 'doc']
+                ]
+            },
+            {
+                texte: 'Ton moment préféré de la journée, c\'est...',
+                choix: [
+                    ['Le matin, quand je m\'entraîne ou je fais du sport', 'storm'],
+                    ['Le soir, quand je retrouve mes amis', 'martin'],
+                    ['Le coucher de soleil', 'sally'],
+                    ['Le moment où je gagne quelque chose', 'chick']
+                ]
+            },
+            {
+                texte: 'Quelqu\'un te demande conseil. Que dis-tu le plus souvent ?',
+                choix: [
+                    ['« Prends ton temps, écoute-toi. »', 'sally'],
+                    ['« L\'expérience, ça s\'apprend petit à petit. »', 'doc'],
+                    ['« Fonce, crois en toi ! »', 'flash'],
+                    ['« Entraîne-toi encore plus que les autres. »', 'storm']
+                ]
+            },
+            {
+                texte: 'Ta phrase préférée serait...',
+                choix: [
+                    ['« Il faut toujours viser la première place. »', 'chick'],
+                    ['« Rire, c\'est la meilleure des solutions. »', 'martin'],
+                    ['« Le travail bien fait parle de lui-même. »', 'doc'],
+                    ['« Sans amis, une victoire ne vaut rien. »', 'flash']
+                ]
+            }
+        ];
+
+        const NOMBRE_QUESTIONS = 6;
+
+        let questions = [];
+        let numero = 0;
+        let points = {};
+
+        const zoneQuiz = document.getElementById('quiz');
+        const zoneResultat = document.getElementById('resultat');
+
+        function melanger(liste) {
+            const copie = liste.slice();
+            for (let i = copie.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const temp = copie[i];
+                copie[i] = copie[j];
+                copie[j] = temp;
+            }
+            return copie;
+        }
+
+        function nouvellePartie() {
+            questions = melanger(reserve).slice(0, NOMBRE_QUESTIONS);
+            numero = 0;
+            points = {};
+            zoneResultat.classList.add('cache');
+            zoneQuiz.classList.remove('cache');
+            afficherQuestion();
+        }
+
+        function afficherQuestion() {
+            const q = questions[numero];
+
+            document.getElementById('progression').textContent =
+                'Question ' + (numero + 1) + ' / ' + questions.length;
+            document.getElementById('remplissage').style.width =
+                (numero / questions.length * 100) + '%';
+            document.getElementById('question').textContent = q.texte;
+
+            const zone = document.getElementById('reponses');
+            zone.innerHTML = '';
+
+            melanger(q.choix).forEach(function (c) {
+                const bouton = document.createElement('button');
+                bouton.className = 'reponse';
+                bouton.textContent = c[0];
+                bouton.addEventListener('click', function () {
+                    points[c[1]] = (points[c[1]] || 0) + 1;
+                    numero++;
+                    if (numero < questions.length) {
+                        afficherQuestion();
+                    } else {
+                        afficherResultat();
+                    }
+                });
+                zone.appendChild(bouton);
+            });
+        }
+
+        function afficherResultat() {
+            let max = 0;
+            Object.keys(points).forEach(function (cle) {
+                if (points[cle] > max) max = points[cle];
+            });
+
+            const egalite = Object.keys(points).filter(function (cle) {
+                return points[cle] === max;
+            });
+            const gagnant = egalite[Math.floor(Math.random() * egalite.length)];
+
+            const p = personnages[gagnant];
+            document.getElementById('emoji').textContent = p.emoji;
+            document.getElementById('nom').textContent = p.nom;
+            document.getElementById('description').textContent = p.texte;
+
+            document.getElementById('remplissage').style.width = '100%';
+            zoneQuiz.classList.add('cache');
+            zoneResultat.classList.remove('cache');
+        }
+
+        document.getElementById('rejouer').addEventListener('click', nouvellePartie);
+
+        nouvellePartie();
+
+    </script>
+
+    <script src="menu.js"></script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quels sont les films Cars</title>
+    <link rel="stylesheet" href="menu.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 15% 10%, rgba(255, 210, 0, 0.15), transparent 40%),
+                radial-gradient(circle at 85% 60%, rgba(255, 90, 0, 0.2), transparent 45%),
+                rgb(200, 0, 0);
+            background-attachment: fixed;
+        }
+
+        /* ===== BARRE DU HAUT ===== */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+            background: #0f0f0f;
+            border-bottom: 3px solid #FFD200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 210, 0, 0.3);
+        }
+
+        .top-title {
+            color: #DC0000;
+            font-size: 34px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-shadow: 0 0 5px #DC0000, 0 0 15px #DC0000, 0 0 25px #DC0000;
+        }
+
+        .top-title span { color: #FFD200; }
+
+        /* ===== PAGE (tient dans l'écran) ===== */
+        .cf-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding: 95px 30px 22px 110px;
+            box-sizing: border-box;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        /* ===== PRÉSENTATION ===== */
+        .cf-intro {
+            position: relative;
+            flex: none;
+            text-align: center;
+            padding: 24px 25px 14px 25px;
+            background: rgba(15, 15, 15, 0.92);
+            border: 3px solid #FFD200;
+            border-radius: 20px;
+            color: white;
+            line-height: 1.5;
+            box-shadow: 0 0 15px #DC0000, 0 0 30px rgba(255, 210, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .cf-intro::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 24px 24px;
+            opacity: 0.85;
+        }
+
+        .cf-titre {
+            margin: 6px 0 8px 0;
+            font-size: clamp(26px, 4vh, 40px);
+            color: #DC0000;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #DC0000, 0 0 15px #DC0000, 0 0 25px #DC0000;
+            animation: cf-vitesse 1s ease both;
+        }
+
+        .cf-intro p {
+            max-width: 900px;
+            margin: 6px auto;
+            font-size: clamp(13px, 1.9vh, 16px);
+        }
+
+        .cf-intro strong { color: #FFD200; }
+
+        /* ===== GRILLE DES FILMS ===== */
+        .cf-grille {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: minmax(0, 1fr);
+            gap: 24px;
+            padding-top: 8px;
+        }
+
+        .cf-carte {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+            background: linear-gradient(145deg, #0b0b0b, #1c1c1c);
+            border: 3px solid #FFD200;
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 0 0 2px #FFD200, 0 0 15px rgba(220, 0, 0, 0.6);
+            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+            animation: cf-entree 0.7s ease backwards;
+        }
+
+        .cf-carte:nth-child(2) { animation-delay: 0.15s; }
+        .cf-carte:nth-child(3) { animation-delay: 0.3s; }
+
+        .cf-carte:hover,
+        .cf-carte:focus-within {
+            transform: translateY(-6px);
+            border-color: #DC0000;
+            box-shadow: 0 0 0 1px #DC0000, 0 0 10px #DC0000, 0 0 30px rgba(255, 210, 0, 0.5);
+        }
+
+        /* Ligne de vitesse au survol */
+        .cf-carte::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -60%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(100deg, transparent, rgba(255, 210, 0, 0.18), transparent);
+            transform: skewX(-20deg);
+            pointer-events: none;
+        }
+
+        .cf-carte:hover::after {
+            left: 130%;
+            transition: left 0.9s ease;
+        }
+
+        .cf-image {
+            position: relative;
+            flex: 1 1 0;
+            min-height: 90px;
+            overflow: hidden;
+            border-bottom: 3px solid #FFD200;
+            background: linear-gradient(135deg, #960000, #DC0000);
+        }
+
+        /* Cadre jaune toujours visible par-dessus l'image */
+        .cf-image::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border: 2px solid #FFD200;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .cf-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .cf-carte:hover .cf-image img { transform: scale(1.06); }
+
+        .cf-texte {
+            flex: none;
+            display: flex;
+            flex-direction: column;
+            padding: 12px 18px 14px 18px;
+        }
+
+        .cf-annee {
+            color: #FFD200;
+            font-weight: bold;
+            letter-spacing: 3px;
+            font-size: 13px;
+        }
+
+        .cf-texte h2 {
+            margin: 2px 0 6px 0;
+            font-size: clamp(22px, 3.4vh, 28px);
+            color: #DC0000;
+            text-shadow: 0 0 5px #DC0000, 0 0 15px #DC0000;
+            transition: text-shadow 0.35s ease;
+        }
+
+        .cf-carte:hover h2 {
+            text-shadow: 0 0 8px #DC0000, 0 0 22px #DC0000;
+        }
+
+        .cf-texte p {
+            margin: 0 0 8px 0;
+            font-size: clamp(12px, 1.7vh, 14.5px);
+            line-height: 1.45;
+        }
+
+        .cf-accroche {
+            padding-top: 8px;
+            border-top: 2px dashed #FFD200;
+            color: #FFD200;
+            font-weight: bold;
+            font-style: italic;
+            font-size: clamp(12px, 1.7vh, 14.5px);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes cf-vitesse {
+            from { opacity: 0; transform: translateX(-60px); letter-spacing: 12px; filter: blur(4px); }
+            to   { opacity: 1; transform: translateX(0); letter-spacing: 2px; filter: blur(0); }
+        }
+
+        @keyframes cf-entree {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== PETITS ÉCRANS : le défilement revient ===== */
+        @media (max-width: 1100px), (max-height: 620px) {
+            body { overflow: auto; }
+
+            .cf-page {
+                height: auto;
+                padding: 95px 20px 40px 105px;
+            }
+
+            .cf-grille {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: none;
+            }
+
+            .cf-image { flex: none; height: 200px; }
+
+            .cf-grille .cf-carte:nth-child(3) {
+                grid-column: 1 / -1;
+                max-width: 520px;
+                margin: 0 auto;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .cf-page { padding: 90px 12px 40px 100px; }
+            .top-title { font-size: 20px; letter-spacing: 2px; }
+            .cf-titre { font-size: 26px; }
+            .cf-grille { grid-template-columns: 1fr; }
+            .cf-grille .cf-carte:nth-child(3) { max-width: none; }
+            .cf-image { height: 190px; }
+        }
+
+        /* ===== RÉDUCTION DES ANIMATIONS ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <div class="top-title">
+            🏎️ FLASH <span>McQUEEN</span> ⚡
+        </div>
+    </div>
+
+    <main class="cf-page">
+
+        <section class="cf-intro">
+            <h1 class="cf-titre">🏁 Quels sont les films Cars ?</h1>
+            <p>
+                La saga <strong>Cars</strong> suit les aventures de <strong>Flash McQueen</strong>,
+                de ses amis et de ses rivaux, entre compétitions automobiles, voyages, humour
+                et moments émouvants.
+            </p>
+            <p>
+                D'un petit village de la Route 66 aux circuits internationaux, puis aux pistes
+                ultra modernes, chaque film fait grandir l'univers et son héros.
+                Que tu les découvres ou que tu aies envie de les revoir, <strong>mets le contact
+                et prépare-toi à rouler !</strong>
+            </p>
+        </section>
+
+        <section class="cf-grille" aria-label="Les trois films Cars">
+
+            <article class="cf-carte" tabindex="0">
+                <div class="cf-image">
+                    <img src="cars1.png" alt="Flash McQueen à Radiator Springs, affiche du film Cars">
+                </div>
+                <div class="cf-texte">
+                    <span class="cf-annee">2006</span>
+                    <h2>Cars</h2>
+                    <p>
+                        Flash McQueen, une jeune voiture de course ambitieuse, rêve de devenir
+                        un grand champion. Mais un détour inattendu l'amène dans une petite ville
+                        de la Route 66, où il rencontre des personnages qui vont bouleverser sa
+                        vision de la vie, de l'amitié et de la victoire.
+                    </p>
+                    <div class="cf-accroche">« Une aventure qui lui apprendra que gagner n'est pas tout. »</div>
+                </div>
+            </article>
+
+            <article class="cf-carte" tabindex="0">
+                <div class="cf-image">
+                    <img src="cars2.png" alt="Flash McQueen et Martin lors du World Grand Prix, affiche du film Cars 2">
+                </div>
+                <div class="cf-texte">
+                    <span class="cf-annee">2011</span>
+                    <h2>Cars 2</h2>
+                    <p>
+                        Flash McQueen part à l'étranger pour participer au prestigieux World Grand
+                        Prix. Accompagné de son meilleur ami Martin, il découvre de nouveaux
+                        circuits, des pilotes internationaux et une aventure pleine de mystères
+                        et de rebondissements.
+                    </p>
+                    <div class="cf-accroche">« De nouveaux circuits, de nouveaux défis et une aventure à toute vitesse ! »</div>
+                </div>
+            </article>
+
+            <article class="cf-carte" tabindex="0">
+                <div class="cf-image">
+                    <img src="cars3.png" alt="Flash McQueen face à la nouvelle génération de pilotes, affiche du film Cars 3">
+                </div>
+                <div class="cf-texte">
+                    <span class="cf-annee">2017</span>
+                    <h2>Cars 3</h2>
+                    <p>
+                        Alors qu'une nouvelle génération de voitures ultra-rapides arrive sur les
+                        circuits, Flash McQueen doit relever un défi important pour continuer à
+                        poursuivre son rêve. Avec l'aide de nouveaux alliés et les leçons de son
+                        passé, il va devoir retrouver sa place dans la compétition.
+                    </p>
+                    <div class="cf-accroche">« Un champion peut-il encore surprendre le monde ? »</div>
+                </div>
+            </article>
+
+        </section>
+
+    </main>
+
+    <script src="menu.js"></script>
+</body>
+</html>

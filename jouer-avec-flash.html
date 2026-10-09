@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Jouer avec Flash McQueen</title>
+    <link rel="stylesheet" href="menu.css">
+
+    <style>
+        body {
+            margin: 0;
+            background-color: rgb(200, 0, 0);
+            font-family: Arial, sans-serif;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+            background: #0f0f0f;
+            border-bottom: 3px solid #FFD200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            box-shadow:
+                0 0 15px rgba(0, 0, 0, 0.8),
+                0 0 15px rgba(255, 210, 0, 0.3);
+        }
+
+        .top-title {
+            color: #DC0000;
+            font-size: 34px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-shadow:
+                0 0 5px #DC0000,
+                0 0 15px #DC0000,
+                0 0 25px #DC0000;
+        }
+
+        .top-title span {
+            color: #FFD200;
+        }
+
+        .contenu {
+            max-width: 420px;
+            margin: 110px auto 40px auto;
+            padding: 15px;
+            background: rgba(15, 15, 15, 0.9);
+            border: 3px solid #FFD200;
+            border-radius: 20px;
+            color: white;
+            line-height: 1.7;
+            text-align: center;
+            box-shadow:
+                0 0 15px #DC0000,
+                0 0 30px rgba(255, 210, 0, 0.4);
+        }
+
+        .contenu h1 {
+            color: #DC0000;
+            font-size: 28px;
+            margin: 5px 0 10px 0;
+            text-shadow:
+                0 0 5px #DC0000,
+                0 0 15px #DC0000;
+        }
+
+        .contenu strong {
+            color: #FFD200;
+        }
+
+        .infos {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+
+        #jeu {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            border: 3px solid #FFD200;
+            border-radius: 12px;
+            background: #333;
+            box-shadow: 0 0 15px rgba(255, 210, 0, 0.4);
+        }
+
+        .commandes {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .bouton-jeu {
+            width: 110px;
+            padding: 12px 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            background: linear-gradient(90deg, #960000, #DC0000);
+            border: 2px solid #FFD200;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .bouton-jeu:hover {
+            background: #FFD200;
+            color: black;
+            transform: scale(1.04);
+            box-shadow:
+                0 0 10px #FFD200,
+                0 0 20px #FFD200;
+        }
+
+        .aide {
+            font-size: 14px;
+            margin: 12px 0 0 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <div class="top-title">
+            🏎️ FLASH <span>McQUEEN</span> ⚡
+        </div>
+    </div>
+
+    <div class="contenu">
+        <h1>🏁 Course de Radiator Springs</h1>
+
+        <div class="infos">
+            <span>Score : <strong id="score">0</strong></span>
+            <span>Record : <strong id="record">0</strong></span>
+        </div>
+
+        <canvas id="jeu" width="360" height="520"></canvas>
+
+        <div class="commandes">
+            <button class="bouton-jeu" id="gauche">◀ Gauche</button>
+            <button class="bouton-jeu" id="droite">Droite ▶</button>
+        </div>
+
+        <p class="aide">
+            Flèches <strong>← →</strong> (ou <strong>Q / D</strong>) pour changer de voie.<br>
+            Évite les obstacles 🚧🚙 et ramasse les éclairs ⚡ (+5 points).<br>
+            <strong>Espace</strong> ou clic sur la piste pour commencer.
+        </p>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('jeu');
+        const ctx = canvas.getContext('2d');
+        const L = canvas.width / 3;
+        const H = canvas.height;
+        const yJoueur = H - 90;
+
+        // Si ta voiture 🏎️ regarde du mauvais côté, change cette valeur en Math.PI / 2
+        const ROTATION_VOITURE = -Math.PI / 2;
+
+        const ennemis = ['🚙', '🚧', '🛢️'];
+
+        let etat = 'attente';
+        let voie, objets, score, vitesse, decor, tempsApparition;
+        let record = 0;
+
+        try {
+            record = parseInt(localStorage.getItem('recordFlash')) || 0;
+        } catch (e) {}
+
+        function majInfos() {
+            document.getElementById('score').textContent = score || 0;
+            document.getElementById('record').textContent = record;
+        }
+
+        function demarrer() {
+            voie = 1;
+            objets = [];
+            score = 0;
+            vitesse = 4;
+            decor = 0;
+            tempsApparition = 30;
+            etat = 'jeu';
+            majInfos();
+        }
+
+        function bouger(direction) {
+            if (etat !== 'jeu') return;
+            voie = Math.max(0, Math.min(2, voie + direction));
+        }
+
+        function perdre() {
+            etat = 'fini';
+            if (score > record) {
+                record = score;
+                try {
+                    localStorage.setItem('recordFlash', record);
+                } catch (e) {}
+            }
+            majInfos();
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '].includes(e.key)) {
+                e.preventDefault();
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'q' || e.key === 'Q') bouger(-1);
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') bouger(1);
+            if ((e.key === ' ' || e.key === 'Enter') && etat !== 'jeu') demarrer();
+        });
+
+        document.getElementById('gauche').addEventListener('click', function () { bouger(-1); });
+        document.getElementById('droite').addEventListener('click', function () { bouger(1); });
+        canvas.addEventListener('click', function () {
+            if (etat !== 'jeu') demarrer();
+        });
+
+        function actualiser() {
+            decor = (decor + vitesse) % 60;
+            vitesse = Math.min(11, vitesse + 0.002);
+
+            tempsApparition--;
+            if (tempsApparition <= 0) {
+                const bonus = Math.random() < 0.3;
+                objets.push({
+                    voie: Math.floor(Math.random() * 3),
+                    y: -60,
+                    bonus: bonus,
+                    emoji: bonus ? '⚡' : ennemis[Math.floor(Math.random() * ennemis.length)]
+                });
+                tempsApparition = Math.max(22, Math.round(60 - vitesse * 3));
+            }
+
+            objets.forEach(function (o) {
+                o.y += vitesse;
+                if (o.voie === voie && Math.abs(o.y - yJoueur) < 50 && !o.fini) {
+                    if (o.bonus) {
+                        score += 5;
+                        o.fini = true;
+                    } else {
+                        perdre();
+                    }
+                }
+                if (!o.bonus && !o.fini && o.y > yJoueur + 60) {
+                    score += 1;
+                    o.fini = true;
+                }
+            });
+
+            objets = objets.filter(function (o) {
+                return o.y < H + 60 && !(o.bonus && o.fini);
+            });
+
+            majInfos();
+        }
+
+        function emoji(texte, x, y, taille) {
+            ctx.font = taille + 'px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(texte, x, y);
+        }
+
+        function dessiner() {
+            // Route
+            ctx.fillStyle = '#333';
+            ctx.fillRect(0, 0, canvas.width, H);
+
+            // Bords jaunes
+            ctx.fillStyle = '#FFD200';
+            ctx.fillRect(0, 0, 6, H);
+            ctx.fillRect(canvas.width - 6, 0, 6, H);
+
+            // Lignes blanches
+            ctx.fillStyle = 'white';
+            for (let i = 1; i <= 2; i++) {
+                for (let y = -60 + decor; y < H; y += 60) {
+                    ctx.fillRect(i * L - 3, y, 6, 30);
+                }
+            }
+
+            if (!objets) return;
+
+            // Obstacles et bonus
+            objets.forEach(function (o) {
+                emoji(o.emoji, o.voie * L + L / 2, o.y, 46);
+            });
+
+            // Voiture du joueur
+            ctx.save();
+            ctx.translate(voie * L + L / 2, yJoueur);
+            ctx.rotate(ROTATION_VOITURE);
+            emoji('🏎️', 0, 0, 52);
+            ctx.restore();
+        }
+
+        function ecran(titre, couleur, ligne1, ligne2) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+            ctx.fillRect(0, 0, canvas.width, H);
+
+            ctx.shadowColor = couleur;
+            ctx.shadowBlur = 15;
+            ctx.fillStyle = couleur;
+            emoji(titre, canvas.width / 2, H / 2 - 50, 34);
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle = 'white';
+            emoji(ligne1, canvas.width / 2, H / 2 + 5, 18);
+            ctx.fillStyle = '#FFD200';
+            emoji(ligne2, canvas.width / 2, H / 2 + 40, 18);
+        }
+
+        function boucle() {
+            if (etat === 'jeu') actualiser();
+            dessiner();
+
+            if (etat === 'attente') {
+                ecran('KATCHOW ⚡', '#DC0000', 'Prêt à courir ?', 'Appuie sur Espace');
+            } else if (etat === 'fini') {
+                ecran('PERDU 💥', '#DC0000', 'Score : ' + score, 'Espace pour rejouer');
+            }
+
+            requestAnimationFrame(boucle);
+        }
+
+        majInfos();
+        boucle();
+    </script>
+
+    <script src="menu.js"></script>
+</body>
+</html>

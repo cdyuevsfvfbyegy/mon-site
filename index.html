@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Flash McQueen</title>
+    <link rel="stylesheet" href="menu.css">
+    <style>
+
+        body {
+            margin: 0;
+            background-color: rgb(200, 0, 0);
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+		
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 75px;
+
+            background: #0f0f0f;
+
+            border-bottom: 3px solid #FFD200;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            z-index: 2000;
+
+            box-shadow:
+                0 0 15px rgba(0, 0, 0, 0.8),
+                0 0 15px rgba(255, 210, 0, 0.3);
+        }
+
+
+        .top-title {
+            color: #DC0000;
+
+            font-size: 34px;
+            font-weight: bold;
+
+            letter-spacing: 4px;
+
+            text-shadow:
+                0 0 5px #DC0000,
+                0 0 15px #DC0000,
+                0 0 25px #DC0000;
+        }
+      
+
+        .top-title span {
+            color: #FFD200;
+        }
+
+     
+        .image-milieu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1000px;
+            transform: translate(-50%, -50%);
+            border-radius: 10px;
+        }
+
+       
+.menu-zone {
+    position: fixed;
+    left: 0;
+    top: 75px;
+    width: 90px;
+    height: calc(100vh - 75px);
+    z-index: 1800;
+
+    background: transparent; 
+   }
+
+
+.menu {
+    position: fixed;
+    left: 0;
+    top: 75px;
+    width: 33.333vw;
+    min-width: 350px;
+    max-width: 500px;
+    height: calc(100vh - 75px);
+    background: linear-gradient(135deg, #080808, #171717);
+    border-right: 4px solid #FFD200;
+    box-shadow:
+        5px 0 25px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(255, 210, 0, 0.35);
+    transform: translateX(calc(-100% + 90px));
+    transition: transform 0.35s ease;
+    z-index: 1700;
+    text-align: center;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.menu-zone:hover ~ .menu,
+.menu:hover {
+    transform: translateX(0);
+}
+
+.menu::after {
+    content: "⚡MENU🛞";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 86px;
+    transform: translateY(-50%);
+    writing-mode: Vertical-rl;
+    text-orientation: upright;
+    text-align: center;
+    color: #FFD200;
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 10px;
+    text-shadow:
+        0 0 5px #FFD200,
+        0 0 15px #FFD200;
+    transition: 0.3s;
+}
+
+.menu:hover::after,
+.menu-zone:hover ~ .menu::after {
+    color: #DC0000;
+    text-shadow:
+        0 0 5px #DC0000,
+        0 0 15px #DC0000;
+}
+
+
+
+
+.menu-zone:hover ~ .menu {
+    left: 0;
+}
+
+.menu:hover {
+    left: 0;
+}
+           
+.presentation {
+    position: absolute;
+    top: 50%;
+    left:75%;
+    transform: translateY(-50%);
+    width: 280px;
+    padding: 25px;
+    background: rgba(15, 15, 15, 0.9);
+    border: 3px solid #FFD200;
+    border-radius: 20px;
+    color: white;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    box-shadow:
+        0 0 15px #DC0000,
+        0 0 30px rgba(255, 210, 0, 0.4);
+		animation: apparition-texte 0.8s ease 0.3s both;
+}
+
+.presentation h1 {
+    color: #DC0000;
+    font-size: 30px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-shadow:
+        0 0 5px #DC0000,
+        0 0 15px #DC0000;
+}
+
+.presentation p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 15px 0;
+}
+
+.presentation strong {
+    color: #FFD200;
+}
+
+.presentation h2 {
+    color: #FFD200;
+    margin-top: 25px;
+    font-size: 23px;
+    text-shadow:
+        0 0 8px #FFD200;
+}
+
+          .menu-button {
+            display: block;
+            width:65%;
+            margin: 0 auto 25px auto;
+            padding:12px 10px;
+			box-sizing: border-box;
+            text-align: center;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            background: linear-gradient(
+                90deg,
+                #960000,
+                #DC0000);          
+            border: 2px solid #FFD200;
+            border-radius: 12px;
+            transition: 0.25s;
+        }
+
+    
+        .menu-button:hover {
+            background: #FFD200;
+            color: black;
+            transform: scale(1.04);
+            box-shadow:
+                0 0 10px #FFD200,
+                0 0 20px #FFD200,
+				0 0 30px rgba(255, 210, 0, 0.5);
+        }
+		
+		  .sous-titre {
+    text-align: center;
+    color: #FFD200;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 40px 0;
+    letter-spacing: 3px;
+    text-shadow:
+        0 0 5px #FFD200,
+        0 0 15px #FFD200,
+        0 0 25px rgba(255, 210, 0, 0.6);
+}
+
+    .menu-titre {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 15px 0 5px 0;
+    padding: 0;
+    text-align: center;
+    color: #DC0000;
+    font-size: 40px;
+    text-shadow:
+        0 0 5px #DC0000,
+        0 0 15px #DC0000,
+        0 0 25px #DC0000;
+
+    position: relative;
+    left: -10px;
+     }
+
+.image-milieu{
+			animation: apparition-image 0.8s ease both;
+			}
+
+ @keyframes apparition-image {
+    from { opacity: 0; transform: translate(-50%, -45%); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes apparition-texte {
+    from { opacity: 0; transform: translateY(-40%); }
+    to   { opacity: 1; transform: translateY(-50%); }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+
+        <div class="top-title">
+            🏎️ FLASH <span>McQUEEN</span> ⚡
+        </div>
+
+    </div>
+
+    <img
+        class="image-milieu"
+        src="téléchargement (2).png"
+        alt="Flash McQueen"
+    >
+
+    <div class="menu-zone"></div>
+	
+<div class="presentation">
+    <h1>🏎️ Bienvenue !</h1>
+    <p>
+        Bienvenue sur notre site <strong>100 % dédié à Flash McQueen !</strong> ⚡
+        Ici, tu trouveras tout ce qui concerne notre champion :
+        <strong>son histoire, des images, des informations et son univers.</strong> 🏁
+        Notre but est simplement de <strong>rassembler les fans de Flash McQueen</strong>
+        et de partager notre passion pour le célèbre bolide rouge.
+     </p>
+    <h2>KATCHOW ! 🏎️💨</h2></div>
+
+    <div class="menu">
+<h1 class="menu-titre">McQUEEN</h1>
+<div class="sous-titre">KATCHOW⚡</div>
+
+        <a href="qui-est-flash.html" class="menu-button">
+    🏁Qui est flash Mcqueen
+</a>
+
+<a href="qui-sont-ces.html" class="menu-button">
+    🚗 Qui sont ces amies et enemies 
+</a>
+
+        <a href="quels-sont-les.html" class="menu-button">
+   🎬 Quels sont les films Cars
+</a>
+
+
+ <a href="jouer-avec-flash.html" class="menu-button">
+    ⚡jouer avec flash McQueen
+</a>
+
+<a href="qui-je-serais.html" class="menu-button">
+🎭 Qui je serais dans Cars
+</a>
+       
+    </div>
+
+    <script src="menu.js"></script>
+</body>
+</html>

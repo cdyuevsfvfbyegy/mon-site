@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Qui est Flash McQueen</title>
+    <link rel="stylesheet" href="menu.css">
+
+    <style>
+        body {
+            margin: 0;
+            background-color: rgb(200, 0, 0);
+            font-family: Arial, sans-serif;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+            background: #0f0f0f;
+            border-bottom: 3px solid #FFD200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            box-shadow:
+                0 0 15px rgba(0, 0, 0, 0.8),
+                0 0 15px rgba(255, 210, 0, 0.3);
+        }
+
+        .top-title {
+            color: #DC0000;
+            font-size: 34px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-shadow:
+                0 0 5px #DC0000,
+                0 0 15px #DC0000,
+                0 0 25px #DC0000;
+        }
+
+        .top-title span {
+            color: #FFD200;
+        }
+
+        .contenu {
+            max-width: 700px;
+            margin: 110px auto 50px auto;
+            padding: 10px;
+            background: rgba(15, 15, 15, 0.9);
+            border: 3px solid #FFD200;
+            border-radius: 30px;
+            color: white;
+            line-height: 1.7;
+            box-shadow:
+            0 0 15px #DC0000,
+            0 0 30px rgba(255, 210, 0, 0.4);
+	    	position: relative;
+            left: 450px;
+			top: 10px;
+		    min-height: 240px;
+           animation: apparition 0.7s ease 0.3s both;			
+        }
+
+        .contenu h1 {
+            color: #DC0000;
+            text-align: center;
+            text-shadow:
+                0 0 5px #DC0000,
+                0 0 15px #DC0000;
+				position: relative;
+				top: -10px;
+        }
+
+.contenu p {padding-left: 40px;
+	 font-size: 17px;
+    text-align: 30px
+	}
+
+        .contenu strong {
+            color: #FFD200;
+        }
+        	
+	.contenu2 {
+    left: -450px;
+    top: -65px;
+    position: relative;
+	 max-width: 350px;
+    min-height: 450px;
+	 animation: apparition 0.7s ease 0.3s both;
+	
+}
+	
+	.contenu2 h1 {
+    position: relative;
+    top: 20px;
+    margin: 0;
+	text-align: center;
+    writing-mode:horizontal-rl  	
+    font-size: 22px;
+}
+
+.contenu2 p {
+    padding-left: 35px;
+	 font-size: 17px;
+    text-align: 20px;
+	margin-top: 60px;
+}
+	
+	.mon-image, .mon-image1 {
+    position: absolute;
+    border-radius: 20px;
+    border: 3px solid #FFD200;
+    box-shadow:
+        0 0 15px #DC0000,
+        0 0 30px rgba(255, 210, 0, 0.4);
+		animation: apparition 0.7s ease  backwards;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mon-image:hover, .mon-image1:hover {
+    transform: scale(1.05);
+    box-shadow:
+        0 0 20px #FFD200,
+        0 0 40px rgba(255, 210, 0, 0.7);
+    z-index: 5;
+}
+
+.mon-image1 {
+    left: 450px;
+    top: 120px;
+    width: 490px;
+}
+
+.mon-image {
+    left: 750px;
+    top: 420px;
+    width: 850px;
+}
+	
+	@keyframes apparition {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+	
+	
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <div class="top-title">
+            🏎️ FLASH <span>McQUEEN</span> ⚡
+        </div>
+    </div>
+
+    <div class="contenu">
+        <h1>🏁 Qui est Flash McQueen ?</h1>
+        <p>
+            <strong>Flash McQueen</strong>
+			est une voiture de  course rouge, numéro
+            <strong>95</strong>qui rêve de devenir le 
+			plus grand champion.Rapide, ambitieux et
+			parfois un peu sûr de lui, il découvre au fil de ses
+			aventures que la victoire n’est pas
+			tout:<strong>l’amitié et l’entraide comptent aussi.</strong>
+        </p>
+    </div>
+	
+	 <div class="contenu contenu2">
+        <h1>🏆 Son histoire</h1>
+        <p>
+		
+            Après son arrivée à <strong>Radiator Springs</strong>, Flash McQueen continue 
+			sa carrière de pilote et enchaîne les courses et les victoires.
+			🏁 Grâce à son talent et à sa détermination, il devient <strong>l’un des
+			plus grands champions de la course automobile.</strong>
+        </p>
+    </div>
+		
+		<img class="mon-image" src="flash4.jpg" alt="Flash McQueen">
+		
+		<img class="mon-image1" src="flash1.jpg" alt="Flash McQueen">
+		
+<script src="menu.js"></script>
+</body>
+</html>

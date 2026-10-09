@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>menu.css</title>
+
+    <style>
+	
+	.menu-zone {
+    position: fixed;
+    left: 0;
+    top: 75px;
+    width: 90px;
+    height: calc(100vh - 75px);
+    z-index: 1600;
+    background: transparent;
+}
+
+.menu {
+    position: fixed;
+    left: 0;
+    top: 75px;
+    width: 33.333vw;
+    min-width: 350px;
+    max-width: 500px;
+    height: calc(100vh - 75px);
+    background: linear-gradient(135deg, #080808, #171717);
+    border-right: 4px solid #FFD200;
+    box-shadow:
+        5px 0 25px rgba(0, 0, 0, 0.9),
+        0 0 30px rgba(255, 210, 0, 0.35);
+    transform: translateX(calc(-100% + 90px));
+    transition: transform 0.35s ease;
+    z-index: 1700;
+    text-align: center;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+.menu-zone:hover ~ .menu,
+.menu:hover {
+    transform: translateX(0);
+}
+
+.menu::after {
+    content: "⚡MENU🛞";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 86px;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    text-align: center;
+    color: #FFD200;
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    text-shadow: 0 0 5px #FFD200, 0 0 15px #FFD200;
+}
+
+.menu-titre {
+    display: block;
+    margin: 15px 0 5px 0;
+    text-align: center;
+    color: #DC0000;
+    font-size: 40px;
+    text-shadow: 0 0 5px #DC0000, 0 0 15px #DC0000, 0 0 25px #DC0000;
+    position: relative;
+    left: -10px;
+}
+
+.sous-titre {
+    text-align: center;
+    color: #FFD200;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 0 40px 0;
+    letter-spacing: 3px;
+    text-shadow: 0 0 5px #FFD200, 0 0 15px #FFD200;
+}
+
+.menu-button {
+    display: block;
+    width: 65%;
+    margin: 0 auto 25px auto;
+    padding: 12px 10px;
+    box-sizing: border-box;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    background: linear-gradient(90deg, #960000, #DC0000);
+    border: 2px solid #FFD200;
+    border-radius: 12px;
+    transition: 0.25s;
+}
+
+.menu-button:hover {
+    background: #FFD200;
+    color: black;
+    transform: scale(1.04);
+    box-shadow:
+        0 0 10px #FFD200,
+        0 0 20px #FFD200,
+        0 0 30px rgba(255, 210, 0, 0.5);
+		
+		.logo-top {
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    height: 55px;
+    width: auto;
+    z-index: 2100;
+    filter: drop-shadow(0 0 8px rgba(255, 210, 0, 0.6));
+    transition: transform 0.3s ease;
+}
+
